@@ -4,18 +4,21 @@
   "description": "Aggregate all phishing lists and create a merkle tree proof to validate without having to download whole list",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-    "files": [
+  "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "build": "tsup src/index.ts src/update-lists.ts --format esm,cjs --dts --clean",
     "lint": "prettier --write .",
     "test": "ts-mocha -p tsconfig.json tests/**/*.test.ts"
   },
   "engines": {
     "node": ">=14.15.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ethereumjs-util": "^7.1.4",
+    "node-fetch": "^2.6.7"
+  },
   "devDependencies": {
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.1.0",
@@ -34,9 +37,9 @@
     "ts-mocha": "^9.0.2",
     "ts-node": "^10.5.0",
     "tsconfig-paths": "^3.12.0",
+    "tsup": "^5.11.13",
     "typescript": "^4.5.5",
-    "typescript-eslint": "0.0.1-alpha.0",
-    "tsup": "^5.11.13"
+    "typescript-eslint": "0.0.1-alpha.0"
   },
   "repository": {
     "type": "git",

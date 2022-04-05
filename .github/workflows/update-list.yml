@@ -1,0 +1,20 @@
+name: Updatelists every 5 mins
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+          cache: "npm"
+      - run: node dist/update-lists.js
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          message: "list updated"
+          add: "*.json"
