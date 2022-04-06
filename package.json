@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsup src/index.ts src/update-lists.ts --format esm,cjs --dts --clean",
     "lint": "prettier --write .",
-    "test": "ts-mocha -p tsconfig.json tests/**/*.test.ts"
+    "test": "ts-mocha -p tsconfig.json tests/**/*.test.ts",
+    "update:lists": "node dist/update-lists.js"
   },
   "engines": {
     "node": ">=14.15.0"

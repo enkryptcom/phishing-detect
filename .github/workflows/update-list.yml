@@ -13,8 +13,8 @@ jobs:
         with:
           node-version: "14"
           cache: "npm"
-      - run: npm install
-      - run: node dist/update-lists.js
+      - run: npm install && npm run build
+      - run: npm run update:lists
       - uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions

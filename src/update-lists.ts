@@ -18,9 +18,9 @@ Promise.all([metamask(), polkadot(), cryptoscamdb(), phishfort()]).then(
       allLists.whitelist = allLists.whitelist.concat(list.whitelist);
       allLists.fuzzylist = allLists.fuzzylist.concat(list.fuzzylist);
     });
-    allLists.blacklist = Array.from(new Set(allLists.blacklist));
-    allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist));
-    allLists.whitelist = Array.from(new Set(allLists.whitelist));
+    allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
+    allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
+    allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
     writeFileSync("./dist/lists/all.json", JSON.stringify(allLists));
     writeFileSync(
       "./dist/lists/whitelist.json",
