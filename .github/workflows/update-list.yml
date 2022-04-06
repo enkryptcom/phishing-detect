@@ -1,5 +1,6 @@
 name: Updatelists every 5 mins
 on:
+  push
   schedule:
     - cron: "*/5 * * * *"
 
