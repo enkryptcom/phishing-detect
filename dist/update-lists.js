@@ -12,7 +12,10 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 
 // src/list-handlers/metamask.ts
 var import_node_fetch = __toESM(require("node-fetch"));
@@ -69,38 +72,35 @@ var polkadot_default = async () => (0, import_node_fetch3.default)(POLKADOT_URL)
   };
 });
 
-// src/list-handlers/cryptoscamdb.ts
-var import_node_fetch4 = __toESM(require("node-fetch"));
-var WHITE_LIST_URL2 = `https://api.cryptoscamdb.org/v1/whitelist`;
-var BLACK_LIST_URL2 = `https://api.cryptoscamdb.org/v1/blacklist`;
-var cryptoscamdb_default = async () => {
-  const whitelist = await (0, import_node_fetch4.default)(WHITE_LIST_URL2).then((res) => res.json()).then((j) => j.result.map((u) => parse_url_default(u).hostname));
-  const blacklist = await (0, import_node_fetch4.default)(BLACK_LIST_URL2).then((res) => res.json()).then((j) => j.result.map((u) => parse_url_default(u).hostname));
-  return {
-    fuzzylist: [],
-    blacklist,
-    whitelist
-  };
-};
-
 // src/update-lists.ts
 var import_fs = require("fs");
-Promise.all([metamask_default(), polkadot_default(), cryptoscamdb_default(), phishfort_default()]).then((lists) => {
-  const allLists = {
-    whitelist: [],
-    blacklist: [],
-    fuzzylist: []
-  };
-  lists.forEach((list) => {
-    allLists.blacklist = allLists.blacklist.concat(list.blacklist);
-    allLists.whitelist = allLists.whitelist.concat(list.whitelist);
-    allLists.fuzzylist = allLists.fuzzylist.concat(list.fuzzylist);
-  });
-  allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
-  allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
-  allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
-  (0, import_fs.writeFileSync)("./dist/lists/all.json", JSON.stringify(allLists));
-  (0, import_fs.writeFileSync)("./dist/lists/whitelist.json", JSON.stringify(allLists.whitelist));
-  (0, import_fs.writeFileSync)("./dist/lists/blacklist.json", JSON.stringify(allLists.blacklist));
-  (0, import_fs.writeFileSync)("./dist/lists/fuzzylist.json", JSON.stringify(allLists.fuzzylist));
-});
+Promise.all([metamask_default(), polkadot_default(), phishfort_default()]).then(
+  (lists) => {
+    const allLists = {
+      whitelist: [],
+      blacklist: [],
+      fuzzylist: []
+    };
+    lists.forEach((list) => {
+      allLists.blacklist = allLists.blacklist.concat(list.blacklist);
+      allLists.whitelist = allLists.whitelist.concat(list.whitelist);
+      allLists.fuzzylist = allLists.fuzzylist.concat(list.fuzzylist);
+    });
+    allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
+    allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
+    allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
+    (0, import_fs.writeFileSync)("./dist/lists/all.json", JSON.stringify(allLists));
+    (0, import_fs.writeFileSync)(
+      "./dist/lists/whitelist.json",
+      JSON.stringify(allLists.whitelist)
+    );
+    (0, import_fs.writeFileSync)(
+      "./dist/lists/blacklist.json",
+      JSON.stringify(allLists.blacklist)
+    );
+    (0, import_fs.writeFileSync)(
+      "./dist/lists/fuzzylist.json",
+      JSON.stringify(allLists.fuzzylist)
+    );
+  }
+);

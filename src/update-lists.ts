@@ -1,12 +1,7 @@
-import {
-  metamask,
-  polkadot,
-  cryptoscamdb,
-  phishfort,
-} from "@src/list-handlers";
+import { metamask, polkadot, phishfort } from "@src/list-handlers";
 import { writeFileSync } from "fs";
 
-Promise.all([metamask(), polkadot(), cryptoscamdb(), phishfort()]).then(
+Promise.all([metamask(), polkadot(), phishfort()]).then(
   (lists: ListDownloader[]) => {
     const allLists: ListDownloader = {
       whitelist: [],

@@ -53,38 +53,35 @@ var polkadot_default = async () => fetch3(POLKADOT_URL).then((res) => res.json()
   };
 });
 
-// src/list-handlers/cryptoscamdb.ts
-import fetch4 from "node-fetch";
-var WHITE_LIST_URL2 = `https://api.cryptoscamdb.org/v1/whitelist`;
-var BLACK_LIST_URL2 = `https://api.cryptoscamdb.org/v1/blacklist`;
-var cryptoscamdb_default = async () => {
-  const whitelist = await fetch4(WHITE_LIST_URL2).then((res) => res.json()).then((j) => j.result.map((u) => parse_url_default(u).hostname));
-  const blacklist = await fetch4(BLACK_LIST_URL2).then((res) => res.json()).then((j) => j.result.map((u) => parse_url_default(u).hostname));
-  return {
-    fuzzylist: [],
-    blacklist,
-    whitelist
-  };
-};
-
 // src/update-lists.ts
 import { writeFileSync } from "fs";
-Promise.all([metamask_default(), polkadot_default(), cryptoscamdb_default(), phishfort_default()]).then((lists) => {
-  const allLists = {
-    whitelist: [],
-    blacklist: [],
-    fuzzylist: []
-  };
-  lists.forEach((list) => {
-    allLists.blacklist = allLists.blacklist.concat(list.blacklist);
-    allLists.whitelist = allLists.whitelist.concat(list.whitelist);
-    allLists.fuzzylist = allLists.fuzzylist.concat(list.fuzzylist);
-  });
-  allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
-  allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
-  allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
-  writeFileSync("./dist/lists/all.json", JSON.stringify(allLists));
-  writeFileSync("./dist/lists/whitelist.json", JSON.stringify(allLists.whitelist));
-  writeFileSync("./dist/lists/blacklist.json", JSON.stringify(allLists.blacklist));
-  writeFileSync("./dist/lists/fuzzylist.json", JSON.stringify(allLists.fuzzylist));
-});
+Promise.all([metamask_default(), polkadot_default(), phishfort_default()]).then(
+  (lists) => {
+    const allLists = {
+      whitelist: [],
+      blacklist: [],
+      fuzzylist: []
+    };
+    lists.forEach((list) => {
+      allLists.blacklist = allLists.blacklist.concat(list.blacklist);
+      allLists.whitelist = allLists.whitelist.concat(list.whitelist);
+      allLists.fuzzylist = allLists.fuzzylist.concat(list.fuzzylist);
+    });
+    allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
+    allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
+    allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
+    writeFileSync("./dist/lists/all.json", JSON.stringify(allLists));
+    writeFileSync(
+      "./dist/lists/whitelist.json",
+      JSON.stringify(allLists.whitelist)
+    );
+    writeFileSync(
+      "./dist/lists/blacklist.json",
+      JSON.stringify(allLists.blacklist)
+    );
+    writeFileSync(
+      "./dist/lists/fuzzylist.json",
+      JSON.stringify(allLists.fuzzylist)
+    );
+  }
+);
