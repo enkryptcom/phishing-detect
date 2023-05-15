@@ -16,9 +16,9 @@ var parse_url_default = (url) => {
 var METAMASK_URL = `https://raw.githubusercontent.com/MetaMask/eth-phishing-detect/master/src/config.json`;
 var metamask_default = async () => fetch(METAMASK_URL).then((res) => res.json()).then((_json) => {
   const json = _json;
-  const fuzzylist = json.fuzzylist.map((u) => parse_url_default(u).hostname);
-  const whitelist = json.whitelist.map((u) => parse_url_default(u).hostname);
-  const blacklist = json.blacklist.map((u) => parse_url_default(u).hostname);
+  const fuzzylist = json.fuzzylist.filter((url) => url.includes(".")).map((u) => parse_url_default(u).hostname);
+  const whitelist = json.whitelist.filter((url) => url.includes(".")).map((u) => parse_url_default(u).hostname);
+  const blacklist = json.blacklist.filter((url) => url.includes(".")).map((u) => parse_url_default(u).hostname);
   return {
     fuzzylist,
     whitelist,
