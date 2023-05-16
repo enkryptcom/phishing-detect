@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "ethereumjs-util": "^7.1.4",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "protobufjs": "^7.2.3"
   },
   "devDependencies": {
     "@types/chai": "^4.3.0",

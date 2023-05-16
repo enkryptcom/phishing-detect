@@ -1,4 +1,5 @@
 import { metamask, polkadot, phishfort } from "@src/list-handlers";
+import Protobuf from "protobufjs";
 import { writeFileSync } from "fs";
 
 Promise.all([metamask(), polkadot(), phishfort()]).then(
@@ -16,6 +17,15 @@ Promise.all([metamask(), polkadot(), phishfort()]).then(
     allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
     allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
     allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
+    Protobuf.load("src/proto/lists.proto").then((protoroot) => {
+      const Lists = protoroot.lookupType("Lists");
+      const buf = Lists.encode({
+        denylist: allLists.blacklist,
+        fuzzylist: allLists.fuzzylist,
+        allowlist: allLists.whitelist,
+      }).finish();
+      writeFileSync("./dist/lists/all.pb.bin", buf);
+    });
     writeFileSync("./dist/lists/all.json", JSON.stringify(allLists));
     writeFileSync(
       "./dist/lists/whitelist.json",

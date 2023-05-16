@@ -77,6 +77,7 @@ var polkadot_default = async () => (0, import_node_fetch3.default)(POLKADOT_URL)
 });
 
 // src/update-lists.ts
+var import_protobufjs = __toESM(require("protobufjs"));
 var import_fs = require("fs");
 Promise.all([metamask_default(), polkadot_default(), phishfort_default()]).then(
   (lists) => {
@@ -93,6 +94,15 @@ Promise.all([metamask_default(), polkadot_default(), phishfort_default()]).then(
     allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
     allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
     allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
+    import_protobufjs.default.load("src/proto/lists.proto").then((protoroot) => {
+      const Lists = protoroot.lookupType("Lists");
+      const buf = Lists.encode({
+        denylist: allLists.blacklist,
+        fuzzylist: allLists.fuzzylist,
+        allowlist: allLists.whitelist
+      }).finish();
+      (0, import_fs.writeFileSync)("./dist/lists/all.pb.bin", buf);
+    });
     (0, import_fs.writeFileSync)("./dist/lists/all.json", JSON.stringify(allLists));
     (0, import_fs.writeFileSync)(
       "./dist/lists/whitelist.json",

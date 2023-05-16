@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message Lists {
+  repeated string denylist      = 1;
+  repeated string fuzzylist     = 2;
+  repeated string allowlist     = 3;
+}
