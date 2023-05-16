@@ -17,6 +17,7 @@
     "node": ">=14.15.0"
   },
   "dependencies": {
+    "crc-32": "^1.2.2",
     "ethereumjs-util": "^7.1.4",
     "node-fetch": "^2.6.7",
     "protobufjs": "^7.2.3"

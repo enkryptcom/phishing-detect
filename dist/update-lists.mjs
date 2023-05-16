@@ -57,10 +57,23 @@ var polkadot_default = async () => fetch3(POLKADOT_URL).then((res) => res.json()
   };
 });
 
+// src/list-handlers/mew.ts
+import fetch4 from "node-fetch";
+var MEW_URL = `https://mainnet.mewwallet.dev/web/denylist`;
+var mew_default = async () => fetch4(MEW_URL).then((res) => res.json()).then((json) => {
+  const blacklist = json.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."));
+  return {
+    fuzzylist: [],
+    whitelist: [],
+    blacklist
+  };
+});
+
 // src/update-lists.ts
 import Protobuf from "protobufjs";
 import { writeFileSync } from "fs";
-Promise.all([metamask_default(), polkadot_default(), phishfort_default()]).then(
+import crc32 from "crc-32";
+Promise.all([metamask_default(), polkadot_default(), phishfort_default(), mew_default()]).then(
   (lists) => {
     const allLists = {
       whitelist: [],
@@ -78,9 +91,15 @@ Promise.all([metamask_default(), polkadot_default(), phishfort_default()]).then(
     Protobuf.load("src/proto/lists.proto").then((protoroot) => {
       const Lists = protoroot.lookupType("Lists");
       const buf = Lists.encode({
-        denylist: allLists.blacklist,
-        fuzzylist: allLists.fuzzylist,
-        allowlist: allLists.whitelist
+        denylist: allLists.blacklist.map(
+          (str) => (crc32.str(str) >>> 0).toString(16)
+        ),
+        fuzzylist: allLists.fuzzylist.map(
+          (str) => (crc32.str(str) >>> 0).toString(16)
+        ),
+        allowlist: allLists.whitelist.map(
+          (str) => (crc32.str(str) >>> 0).toString(16)
+        )
       }).finish();
       writeFileSync("./dist/lists/all.pb.bin", buf);
     });

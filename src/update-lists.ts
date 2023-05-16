@@ -1,8 +1,9 @@
-import { metamask, polkadot, phishfort } from "@src/list-handlers";
+import { metamask, polkadot, phishfort, mew } from "@src/list-handlers";
 import Protobuf from "protobufjs";
 import { writeFileSync } from "fs";
+import crc32 from "crc-32";
 
-Promise.all([metamask(), polkadot(), phishfort()]).then(
+Promise.all([metamask(), polkadot(), phishfort(), mew()]).then(
   (lists: ListDownloader[]) => {
     const allLists: ListDownloader = {
       whitelist: [],
@@ -20,9 +21,15 @@ Promise.all([metamask(), polkadot(), phishfort()]).then(
     Protobuf.load("src/proto/lists.proto").then((protoroot) => {
       const Lists = protoroot.lookupType("Lists");
       const buf = Lists.encode({
-        denylist: allLists.blacklist,
-        fuzzylist: allLists.fuzzylist,
-        allowlist: allLists.whitelist,
+        denylist: allLists.blacklist.map((str) =>
+          (crc32.str(str) >>> 0).toString(16)
+        ),
+        fuzzylist: allLists.fuzzylist.map((str) =>
+          (crc32.str(str) >>> 0).toString(16)
+        ),
+        allowlist: allLists.whitelist.map((str) =>
+          (crc32.str(str) >>> 0).toString(16)
+        ),
       }).finish();
       writeFileSync("./dist/lists/all.pb.bin", buf);
     });
