@@ -9,14 +9,14 @@ export default async (): Promise<ListDownloader> =>
     .then((_json) => {
       const json = _json as MetamaskList;
       const fuzzylist = json.fuzzylist
-        .filter((url) => url.includes("."))
-        .map((u) => URLParser(u).hostname);
+        .map((u) => URLParser(u).hostname)
+        .filter((url) => url.includes("."));
       const whitelist = json.whitelist
-        .filter((url) => url.includes("."))
-        .map((u) => URLParser(u).hostname);
+        .map((u) => URLParser(u).hostname)
+        .filter((url) => url.includes("."));
       const blacklist = json.blacklist
-        .filter((url) => url.includes("."))
-        .map((u) => URLParser(u).hostname);
+        .map((u) => URLParser(u).hostname)
+        .filter((url) => url.includes("."));
       return {
         fuzzylist,
         whitelist,

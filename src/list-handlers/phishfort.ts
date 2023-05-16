@@ -7,10 +7,14 @@ const BLACK_LIST_URL = `https://raw.githubusercontent.com/phishfort/phishfort-li
 export default async (): Promise<ListDownloader> => {
   const whitelist: string[] = await fetch(WHITE_LIST_URL)
     .then((res) => res.json())
-    .then((j) => j.map((u) => URLParser(u).hostname));
+    .then((j) =>
+      j.map((u) => URLParser(u).hostname).filter((url) => url.includes("."))
+    );
   const blacklist: string[] = await fetch(BLACK_LIST_URL)
     .then((res) => res.json())
-    .then((j) => j.map((u) => URLParser(u).hostname));
+    .then((j) =>
+      j.map((u) => URLParser(u).hostname).filter((url) => url.includes("."))
+    );
   return {
     fuzzylist: [],
     blacklist,

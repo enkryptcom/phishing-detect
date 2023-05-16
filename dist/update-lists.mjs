@@ -16,9 +16,9 @@ var parse_url_default = (url) => {
 var METAMASK_URL = `https://raw.githubusercontent.com/MetaMask/eth-phishing-detect/master/src/config.json`;
 var metamask_default = async () => fetch(METAMASK_URL).then((res) => res.json()).then((_json) => {
   const json = _json;
-  const fuzzylist = json.fuzzylist.filter((url) => url.includes(".")).map((u) => parse_url_default(u).hostname);
-  const whitelist = json.whitelist.filter((url) => url.includes(".")).map((u) => parse_url_default(u).hostname);
-  const blacklist = json.blacklist.filter((url) => url.includes(".")).map((u) => parse_url_default(u).hostname);
+  const fuzzylist = json.fuzzylist.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."));
+  const whitelist = json.whitelist.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."));
+  const blacklist = json.blacklist.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."));
   return {
     fuzzylist,
     whitelist,
@@ -31,8 +31,12 @@ import fetch2 from "node-fetch";
 var WHITE_LIST_URL = `https://raw.githubusercontent.com/phishfort/phishfort-lists/master/whitelists/domains.json`;
 var BLACK_LIST_URL = `https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json`;
 var phishfort_default = async () => {
-  const whitelist = await fetch2(WHITE_LIST_URL).then((res) => res.json()).then((j) => j.map((u) => parse_url_default(u).hostname));
-  const blacklist = await fetch2(BLACK_LIST_URL).then((res) => res.json()).then((j) => j.map((u) => parse_url_default(u).hostname));
+  const whitelist = await fetch2(WHITE_LIST_URL).then((res) => res.json()).then(
+    (j) => j.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."))
+  );
+  const blacklist = await fetch2(BLACK_LIST_URL).then((res) => res.json()).then(
+    (j) => j.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."))
+  );
   return {
     fuzzylist: [],
     blacklist,
@@ -44,8 +48,8 @@ var phishfort_default = async () => {
 import fetch3 from "node-fetch";
 var POLKADOT_URL = `https://raw.githubusercontent.com/polkadot-js/phishing/master/all.json`;
 var polkadot_default = async () => fetch3(POLKADOT_URL).then((res) => res.json()).then((json) => {
-  const blacklist = json.deny.map((u) => parse_url_default(u).hostname);
-  const whitelist = json.allow.map((u) => parse_url_default(u).hostname);
+  const blacklist = json.deny.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."));
+  const whitelist = json.allow.map((u) => parse_url_default(u).hostname).filter((url) => url.includes("."));
   return {
     fuzzylist: [],
     whitelist,
