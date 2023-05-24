@@ -19,4 +19,6 @@ jobs:
         with:
           default_author: github_actions
           message: "list updated"
-          add: "dist/lists/*.json"
+          add:
+            - "dist/lists/*.json"
+            - "dist/lists/*.bin"
