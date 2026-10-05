@@ -15,7 +15,10 @@ Promise.all([metamask(), polkadot(), phishfort(), mew()]).then(
       allLists.whitelist = allLists.whitelist.concat(list.whitelist);
       allLists.fuzzylist = allLists.fuzzylist.concat(list.fuzzylist);
     });
-    allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
+    // Keep this false positive from being reintroduced by upstream feeds.
+    allLists.blacklist = Array.from(new Set(allLists.blacklist))
+      .filter((domain) => domain !== "applaunch.org")
+      .sort();
     allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
     allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
     Protobuf.load("src/proto/lists.proto").then((protoroot) => {
