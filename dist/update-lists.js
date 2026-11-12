@@ -104,7 +104,7 @@ Promise.all([metamask_default(), polkadot_default(), phishfort_default(), mew_de
       allLists.whitelist = allLists.whitelist.concat(list.whitelist);
       allLists.fuzzylist = allLists.fuzzylist.concat(list.fuzzylist);
     });
-    allLists.blacklist = Array.from(new Set(allLists.blacklist)).sort();
+    allLists.blacklist = Array.from(new Set(allLists.blacklist)).filter((domain) => domain !== "applaunch.org").sort();
     allLists.fuzzylist = Array.from(new Set(allLists.fuzzylist)).sort();
     allLists.whitelist = Array.from(new Set(allLists.whitelist)).sort();
     import_protobufjs.default.load("src/proto/lists.proto").then((protoroot) => {
